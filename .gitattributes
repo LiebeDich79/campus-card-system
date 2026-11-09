@@ -1,0 +1,25 @@
+# 统一换行符，避免 Windows / macOS / Linux 协作时的 diff 噪声
+* text=auto eol=lf
+
+# 显式标记为文本
+*.java text
+*.xml text
+*.yml text
+*.yaml text
+*.md text
+*.html text
+*.css text
+*.js text
+*.ts text
+*.json text
+*.sql text
+*.py text
+*.vue text
+
+# 二进制资源不转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.woff binary
+*.woff2 binary

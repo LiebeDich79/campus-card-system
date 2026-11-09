@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>校园一卡通消费与结算系统 · 界面预览</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  :root {
+    --primary: #2f5597; --primary-600: #274a85; --primary-50: #eef3fb;
+    --success: #2e9e5b; --success-50: #e8f6ee;
+    --warning: #e08a00; --warning-50: #fdf0db;
+    --danger: #e0413e; --danger-50: #fdeceb;
+    --info: #2f8fd5; --info-50: #e7f2fb;
+    --bg: #f4f6fb; --surface: #ffffff; --surface-2: #f8fafd;
+    --border: #e6eaf2; --border-strong: #d6dce8;
+    --text: #1f2a3d; --text-2: #46556b; --muted: #7a869a;
+    --shadow-sm: 0 1px 2px rgba(20,40,80,.05), 0 1px 3px rgba(20,40,80,.04);
+    --shadow-md: 0 6px 20px rgba(20,40,80,.09);
+    --radius: 14px; --radius-sm: 9px;
+  }
+  html, body { height: 100%; }
+  body { margin: 0; font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", Arial, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+  code, .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 12px; }
+
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar { width: 234px; flex-shrink: 0; background: linear-gradient(180deg, #1f2c42 0%, #172033 100%); color: #cbd7ea; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
+  .brand { display: flex; align-items: center; gap: 12px; padding: 20px 20px 18px; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .brand .logo { width: 38px; height: 38px; flex-shrink: 0; border-radius: 11px; background: linear-gradient(135deg, #3b6fc4, #2f5597); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 14px rgba(47,85,151,.45); }
+  .brand .logo svg { width: 22px; height: 22px; color: #fff; }
+  .brand .name { font-size: 15px; font-weight: 700; color: #fff; line-height: 1.3; }
+  .brand .sub { font-size: 11px; color: #9fb0cc; margin-top: 2px; }
+  .menu { padding: 16px 12px; flex: 1; }
+  .menu a { display: flex; align-items: center; gap: 12px; padding: 11px 14px; margin-bottom: 6px; border-radius: 10px; color: #cbd7ea; text-decoration: none; font-size: 14px; position: relative; cursor: pointer; transition: background .15s, color .15s; }
+  .menu a svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .menu a:hover { background: rgba(255,255,255,.06); color: #fff; }
+  .menu a.on { background: linear-gradient(135deg, rgba(59,111,196,.28), rgba(47,85,151,.18)); color: #fff; }
+  .menu a.on::before { content: ''; position: absolute; left: 0; top: 11px; bottom: 11px; width: 3px; border-radius: 3px; background: #5b8de0; }
+  .sidebar .foot { padding: 16px 20px; font-size: 11px; color: #7f92b0; line-height: 1.9; border-top: 1px solid rgba(255,255,255,.08); }
+
+  .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .topbar { height: 64px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 26px; position: sticky; top: 0; z-index: 10; }
+  .topbar .title-wrap { display: flex; flex-direction: column; gap: 2px; }
+  .topbar h1 { font-size: 18px; margin: 0; color: var(--text); font-weight: 700; }
+  .topbar .crumb { font-size: 12px; color: var(--muted); }
+  .topbar .user { display: flex; align-items: center; gap: 12px; }
+  .topbar .env { font-size: 12px; color: var(--muted); text-align: right; line-height: 1.4; }
+  .topbar .avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #3b6fc4, #2f5597); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
+  .content { padding: 24px 26px; max-width: 1360px; width: 100%; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 18px; box-shadow: var(--shadow-sm); }
+  .card h2 { font-size: 15px; margin: 0 0 16px; color: var(--text); display: flex; align-items: center; gap: 9px; font-weight: 700; }
+  .card h2::before { content: ''; width: 4px; height: 15px; border-radius: 3px; background: linear-gradient(180deg, #3b6fc4, #2f5597); }
+
+  .grid { display: grid; gap: 16px; }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 1080px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 720px) { .grid-4, .grid-2 { grid-template-columns: 1fr; } }
+
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow-sm); }
+  .stat .icon { width: 50px; height: 50px; flex-shrink: 0; border-radius: 13px; display: flex; align-items: center; justify-content: center; }
+  .stat .icon svg { width: 25px; height: 25px; }
+  .stat .icon.blue { background: var(--primary-50); color: var(--primary); }
+  .stat .icon.green { background: var(--success-50); color: var(--success); }
+  .stat .icon.orange { background: var(--warning-50); color: var(--warning); }
+  .stat .label { font-size: 12.5px; color: var(--muted); }
+  .stat .value { font-size: 27px; font-weight: 800; margin-top: 6px; color: var(--text); letter-spacing: -.5px; line-height: 1; }
+  .stat .value.green { color: var(--success); }
+  .stat .value.orange { color: var(--warning); }
+  .stat .sub { font-size: 11.5px; color: var(--muted); margin-top: 8px; }
+
+  label { display: block; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+  input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-size: 13.5px; font-family: inherit; outline: none; background: #fff; color: var(--text); }
+  input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(47,85,151,.15); }
+  .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 14px; }
+  .form-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px; }
+
+  button { padding: 9px 18px; border: none; border-radius: var(--radius-sm); background: linear-gradient(135deg, #3b6fc4, #2f5597); color: #fff; font-size: 13.5px; font-weight: 600; cursor: pointer; font-family: inherit; box-shadow: 0 2px 6px rgba(47,85,151,.25); }
+  button:hover { filter: brightness(1.06); }
+  button.ghost { background: #eef3fb; color: var(--primary); box-shadow: none; }
+  button.ghost:hover { background: #e2ebf8; }
+  button.warn { background: linear-gradient(135deg, #f0a020, #e08a00); box-shadow: 0 2px 6px rgba(224,138,0,.25); }
+  button.danger { background: linear-gradient(135deg, #ef5b58, #e0413e); box-shadow: 0 2px 6px rgba(224,65,62,.25); }
+
+  .table-wrap { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 11px 14px; border-bottom: 1px solid #eef1f6; text-align: left; }
+  th { background: var(--surface-2); color: var(--text-2); font-weight: 600; font-size: 12px; letter-spacing: .3px; }
+  tr:hover td { background: #fafcff; }
+  tr:last-child td { border-bottom: none; }
+
+  .tag { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; background: var(--success-50); color: var(--success); }
+  .tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .tag.warn { background: var(--warning-50); color: var(--warning); }
+  .tag.gray { background: #eef1f5; color: #6b7789; }
+
+  .alert { padding: 11px 14px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 16px; border: 1px solid transparent; }
+  .alert.ok { background: var(--success-50); color: #256e45; border-color: #cdeccd; }
+  .alert.err { background: var(--danger-50); color: #a32724; border-color: #f6d2d0; }
+
+  .empty { text-align: center; padding: 38px 16px; color: var(--muted); font-size: 13px; }
+  .muted { color: var(--muted); font-size: 12px; line-height: 1.7; }
+  .flex { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .right { margin-left: auto; }
+  .note { font-size: 12px; color: var(--muted); line-height: 1.9; background: var(--surface); border: 1px dashed var(--border-strong); border-radius: var(--radius); padding: 16px 20px; }
+
+  .bar-wrap { display: flex; align-items: flex-end; gap: 18px; height: 210px; padding: 18px 10px 0; border-bottom: 2px solid var(--border); }
+  .bar-item { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+  .bar-val { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 7px; }
+  .bar { width: 62%; background: linear-gradient(180deg, #5b8de0, #2f5597); border-radius: 7px 7px 0 0; min-height: 4px; box-shadow: 0 3px 10px rgba(47,85,151,.25); }
+  .bar-item .name { font-size: 12px; color: var(--muted); margin-top: 10px; text-align: center; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2.5" /><line x1="2" y1="10" x2="22" y2="10" />
+          </svg>
+        </div>
+        <div>
+          <div class="name">校园一卡通</div>
+          <div class="sub">消费与结算系统</div>
+        </div>
+      </div>
+      <nav class="menu">
+        <a v-for="t in tabs" :key="t" :class="{on: tab===t}" @click="tab=t">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path :d="icons[t]" /></svg>
+          <span>{{ t }}</span>
+        </a>
+      </nav>
+      <div class="foot">Spring Boot 2.7 · Java 8<br />MySQL 8.0 · 9 种设计模式</div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="title-wrap">
+          <h1>{{ tab }}</h1>
+          <div class="crumb">校园一卡通 / {{ tab }}</div>
+        </div>
+        <div class="user">
+          <div class="env">当前用户：admin<br />界面预览（免构建）</div>
+          <div class="avatar">AD</div>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- 总览看板 -->
+        <template v-if="tab==='总览看板'">
+          <div class="grid grid-4" style="margin-bottom:18px">
+            <div class="stat">
+              <div class="icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+              <div class="meta"><div class="label">近 30 日交易笔数</div><div class="value">1,284</div><div class="sub">成功 + 失败累计</div></div>
+            </div>
+            <div class="stat">
+              <div class="icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+              <div class="meta"><div class="label">消费合计（元）</div><div class="value green">18,640.50</div><div class="sub">人民币（元）</div></div>
+            </div>
+            <div class="stat">
+              <div class="icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8 12 12 16 16 12"/><line x1="12" y1="8" x2="12" y2="15"/></svg></div>
+              <div class="meta"><div class="label">充值合计（元）</div><div class="value orange">9,200.00</div><div class="sub">人民币（元）</div></div>
+            </div>
+            <div class="stat">
+              <div class="icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-2.5 6h5z"/><path d="M19 7l-2.5 6h5z"/></svg></div>
+              <div class="meta"><div class="label">净消费（元）</div><div class="value">9,440.50</div><div class="sub">消费 − 充值</div></div>
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <h2>按终端类别汇总</h2>
+              <div class="bar-wrap">
+                <div class="bar-item" v-for="b in bars" :key="b.n">
+                  <div class="bar-val">¥{{ b.v }}</div>
+                  <div class="bar" :style="{height:b.h+'px'}"></div>
+                  <div class="name">{{ b.n }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <h2>最近通知（观察者模式产出）</h2>
+              <div class="table-wrap">
+                <table><thead><tr><th>渠道</th><th>内容</th></tr></thead><tbody>
+                  <tr><td><span class="tag">PUSH</span></td><td>卡号 202601010001 完成消费，金额 13.50 元</td></tr>
+                  <tr><td><span class="tag gray">AUDIT</span></td><td>SETTLE TX202611050001 CONSUME 13.50 元</td></tr>
+                  <tr><td><span class="tag">PUSH</span></td><td>卡号 202601010002 完成充值，金额 100.00 元</td></tr>
+                </tbody></table>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>交易链路一览</h2>
+            <p class="muted" style="line-height:2;margin:0">
+              适配器统一终端报文 → 动态代理鉴权/日志/限流 → 责任链逐级校验并原子扣款 → 策略计算实付金额 →
+              工厂与建造者生成交易单 → 装饰链完成结算增强 → 事务提交后由观察者通知对账、统计、消息推送与积分流水。
+            </p>
+          </div>
+        </template>
+
+        <!-- 卡片管理 -->
+        <template v-if="tab==='卡片管理'">
+          <div class="card">
+            <h2>开户</h2>
+            <div class="form-row-3">
+              <div><label>卡号</label><input v-model="newCard" placeholder="202601010099" /></div>
+              <div><label>持卡人</label><input placeholder="姓名" /></div>
+              <div><label>卡类型</label><select><option>学生卡</option><option>教师卡</option></select></div>
+              <div><label>初始余额（元）</label><input type="number" value="0" /></div>
+              <div><label>交易密码</label><input placeholder="6 位数字" /></div>
+              <div style="display:flex;align-items:flex-end"><button @click="alert('演示页：提交将调用 POST /api/cards')">提交开户</button></div>
+            </div>
+          </div>
+          <div class="card">
+            <h2>卡片列表</h2>
+            <div class="flex" style="margin-bottom:12px">
+              <span class="muted right">状态：NORMAL 正常 / LOST 挂失 / FROZEN 冻结 / CANCELLED 注销</span>
+            </div>
+            <div class="table-wrap">
+              <table><thead><tr><th>卡号</th><th>持卡人</th><th>类型</th><th>状态</th><th>余额</th></tr></thead><tbody>
+                <tr v-for="c in cards" :key="c.no"><td class="mono">{{c.no}}</td><td>{{c.name}}</td><td>{{c.type}}</td>
+                  <td><span class="tag" :class="{warn:c.status!=='正常'}">{{c.status}}</span></td><td>{{c.balance}}</td></tr>
+              </tbody></table>
+            </div>
+            <p class="muted" style="margin-top:12px">充值 / 挂失 / 销户按钮在完整 Vue 工程中可用，见 frontend/src/views/Cards.vue</p>
+          </div>
+        </template>
+
+        <!-- 消费收银台 -->
+        <template v-if="tab==='消费收银台'">
+          <div class="grid grid-2">
+            <div class="card">
+              <h2>标准消费扣款</h2>
+              <div class="form-row">
+                <div><label>卡号</label><input v-model="consume.cardNo" /></div>
+                <div><label>终端</label><select v-model="consume.terminal"><option>POS-01 食堂 POS</option><option>MART-01 校园超市</option><option>ACCESS-01 门禁</option><option>WATER-01 水控</option></select></div>
+                <div><label>消费金额（元）</label><input type="number" v-model="consume.amount" /></div>
+                <div><label>优惠策略</label><select v-model="consume.strategy"><option value="">自动选择（学生折扣/午餐补贴）</option><option>NORMAL 普通扣款</option><option>DISCOUNT 折扣</option><option>SUBSIDY 补贴</option><option>POINTS 积分抵扣</option></select></div>
+              </div>
+              <button @click="demo">模拟提交消费</button>
+            </div>
+            <div class="card">
+              <h2>交易结果</h2>
+              <div class="table-wrap">
+                <table><tbody>
+                  <tr><th style="width:110px">交易号</th><td class="mono">TX20261105000128</td></tr>
+                  <tr><th>原价 / 优惠</th><td>{{ consume.amount }}.00 / {{ discount }}.00</td></tr>
+                  <tr><th>实付金额</th><td><b>{{ payable }}.00</b> 元</td></tr>
+                  <tr><th>命中策略</th><td>{{ consume.strategy || 'DISCOUNT（学生 9 折）' }}</td></tr>
+                  <tr><th>扣款后余额</th><td>486.50 元</td></tr>
+                  <tr><th>状态</th><td><span class="tag">SUCCESS</span></td></tr>
+                </tbody></table>
+              </div>
+              <p class="muted" style="margin-top:12px">真实扣款需启动后端；此处仅演示界面与策略计算效果。</p>
+            </div>
+          </div>
+        </template>
+
+        <!-- 交易流水 -->
+        <template v-if="tab==='交易流水'">
+          <div class="card">
+            <h2>消费明细查询（分页）</h2>
+            <div class="table-wrap">
+              <table><thead><tr><th>交易号</th><th>卡号</th><th>类型</th><th>终端</th><th>实付</th><th>策略</th><th>状态</th></tr></thead><tbody>
+                <tr v-for="t in txs" :key="t.no"><td class="mono">{{t.no}}</td><td class="mono">{{t.card}}</td><td>{{t.type}}</td><td>{{t.terminal}}</td><td>{{t.amount}}</td><td>{{t.strategy}}</td><td><span class="tag">{{t.status}}</span></td></tr>
+              </tbody></table>
+            </div>
+          </div>
+        </template>
+
+        <!-- 对账统计 -->
+        <template v-if="tab==='对账统计'">
+          <div class="grid grid-2">
+            <div class="card">
+              <h2>按终端金额对比</h2>
+              <div class="bar-wrap">
+                <div class="bar-item" v-for="b in bars" :key="b.n">
+                  <div class="bar-val">¥{{ b.v }}</div>
+                  <div class="bar" :style="{height:b.h+'px'}"></div>
+                  <div class="name">{{ b.n }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <h2>对账单</h2>
+              <div class="table-wrap">
+                <table><thead><tr><th>终端</th><th>日期</th><th>笔数</th><th>金额合计</th></tr></thead><tbody>
+                  <tr><td class="mono">POS-01</td><td>2026-11-05</td><td>642</td><td>9,860.00</td></tr>
+                  <tr><td class="mono">MART-01</td><td>2026-11-05</td><td>318</td><td>5,420.50</td></tr>
+                  <tr><td class="mono">ACCESS-01</td><td>2026-11-05</td><td>246</td><td>24.60</td></tr>
+                  <tr><td class="mono">WATER-01</td><td>2026-11-05</td><td>78</td><td>19.50</td></tr>
+                </tbody></table>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <div class="note">
+          说明：本文件是<strong>免构建的界面预览</strong>（Vue 3 CDN，需联网加载运行时），用于快速查看界面布局与交互；
+          完整可运行的前端工程位于 <code>frontend/</code>，执行 <code>npm install &amp;&amp; npm run dev</code> 后即可连接后端完成真实业务操作。
+          页面中的数字为演示数据，与报告中的测试记录一致口径，实际数据由 MySQL 查询得出。
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const { createApp } = Vue
+createApp({
+  data() {
+    return {
+      tabs: ['总览看板', '卡片管理', '消费收银台', '交易流水', '对账统计'],
+      icons: {
+        '总览看板': 'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z',
+        '卡片管理': 'M3 5h18v14H3zM3 10h18',
+        '消费收银台': 'M3 3h2l2.4 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H6',
+        '交易流水': 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',
+        '对账统计': 'M6 20V10M12 20V4M18 20v-7'
+      },
+      tab: '总览看板', newCard: '',
+      consume: { cardNo: '202601010001', terminal: 'POS-01 食堂 POS', amount: 15, strategy: '' },
+      cards: [
+        { no: '202601010001', name: '张同学', type: '学生卡', status: '正常', balance: '486.50' },
+        { no: '202601010002', name: '李同学', type: '学生卡', status: '正常', balance: '132.00' },
+        { no: '202601010003', name: '王同学', type: '学生卡', status: '已挂失', balance: '0.00' },
+        { no: 'T20260001', name: '赵老师', type: '教师卡', status: '正常', balance: '980.00' }
+      ],
+      bars: [
+        { n: '食堂', v: '9,860', h: 110 }, { n: '超市', v: '5,420', h: 78 },
+        { n: '门禁', v: '24.6', h: 22 }, { n: '水控', v: '19.5', h: 18 },
+        { n: '退款', v: '316', h: 34 }
+      ],
+      txs: [
+        { no: 'TX20261105000128', card: '202601010001', type: 'CONSUME', terminal: 'POS-01', amount: '13.50', strategy: 'DISCOUNT', status: 'SUCCESS' },
+        { no: 'TX20261105000127', card: '202601010002', type: 'RECHARGE', terminal: '—', amount: '100.00', strategy: 'NORMAL', status: 'SUCCESS' },
+        { no: 'TX20261105000126', card: '202601010001', type: 'CONSUME', terminal: 'MART-01', amount: '21.15', strategy: 'DISCOUNT', status: 'SUCCESS' },
+        { no: 'TX20261105000125', card: 'T20260001', type: 'REFUND', terminal: 'POS-02', amount: '8.00', strategy: 'NORMAL', status: 'SUCCESS' },
+        { no: 'TX20261105000124', card: '202601010001', type: 'CONSUME', terminal: 'WATER-01', amount: '0.25', strategy: 'NORMAL', status: 'SUCCESS' }
+      ]
+    }
+  },
+  computed: {
+    discount() { return Number(this.consume.amount) * 0.1 },
+    payable() { return (Number(this.consume.amount) * 0.9).toFixed(2) }
+  },
+  methods: {
+    demo() { window.alert('演示页仅展示界面；真实扣款请运行 backend + frontend 工程。') },
+    alert(msg) { window.alert(msg) }
+  }
+}).mount('#app')
+</script>
+</body>
+</html>

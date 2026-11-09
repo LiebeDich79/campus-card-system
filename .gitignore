@@ -1,0 +1,32 @@
+# ===== 构建产物 =====
+target/
+frontend/dist/
+*.class
+*.jar
+*.war
+
+# ===== 依赖 =====
+frontend/node_modules/
+
+# ===== IDE / 编辑器 =====
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# ===== 操作系统 / 编辑器缓存 =====
+.DS_Store
+Thumbs.db
+*.log
+
+# ===== 本地配置 / 密钥（请勿提交真实密码） =====
+application-local.yml
+*.local.yml
+.env
+.secret
+
+# ===== 工具与代理目录 =====
+.workbuddy/
+
+# ===== Windows 设备名误生成的空文件（历史遗留，已删除） =====
+nul

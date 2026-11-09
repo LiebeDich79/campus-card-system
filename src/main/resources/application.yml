@@ -1,0 +1,41 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: campus-card
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/campus_card?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+      continue-on-error: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+# 业务参数：由 CampusProperties 读取后注入 SystemConfig 单例
+campus:
+  single-limit: 200.00
+  daily-limit: 1000.00
+  student-discount: 0.90
+  teacher-discount: 0.95
+  subsidy-amount: 2.00
+  water-price-per-liter: 0.02
+  access-fee: 0.10
+  points-per-yuan: 100
+  max-qps-per-terminal: 20
+
+logging:
+  level:
+    com.campus.card: INFO
